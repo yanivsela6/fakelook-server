@@ -38,7 +38,7 @@ namespace fakeLook_dal.Data
             modelBuilder.Entity<Comment>().HasMany(c => c.UserTaggedComment).WithOne(utc => utc.Comment).OnDelete(DeleteBehavior.NoAction);
             #endregion
             //simple seed
-            SeedDb(modelBuilder);
+            //SeedDb(modelBuilder);
         }
         private void SeedDb(ModelBuilder modelBuilder)
         {
