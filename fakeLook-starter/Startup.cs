@@ -31,6 +31,7 @@ namespace fakeLook_starter
         public void ConfigureServices(IServiceCollection services)
         {
 
+
             services.AddControllers();
             #region Setting repository and services interfaces
             services.AddTransient<IPostRepository, PostRepository>();
@@ -52,6 +53,8 @@ namespace fakeLook_starter
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "fakeLook_starter", Version = "v1" });
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
