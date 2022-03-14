@@ -14,6 +14,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using fakeLook_starter.Interfaces;
 using fakeLook_starter.Repositories;
+using fakeLook_models.Models;
+using auth_example.Services;
+using auth_example.Interfaces;
 
 namespace fakeLook_starter
 {
@@ -31,6 +34,9 @@ namespace fakeLook_starter
         public void ConfigureServices(IServiceCollection services)
         {
 
+
+            services.AddTransient<ITokenService, TokenService>();
+            //services.AddSingleton<IRepository<User>, UsersRepository>();
 
             services.AddControllers();
             #region Setting repository and services interfaces
@@ -67,6 +73,8 @@ namespace fakeLook_starter
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "fakeLook_starter v1"));
             }
+
+            app.UseCors(_MyAllowSpecificOrigin);
 
             app.UseHttpsRedirection();
 
