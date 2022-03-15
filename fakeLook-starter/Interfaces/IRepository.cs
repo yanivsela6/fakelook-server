@@ -20,6 +20,6 @@ namespace fakeLook_starter.Interfaces
     }
     public interface IPostRepository : IRepository<Post>
     {
-
+        public Task<Post> Delete(int id);
     }
 }

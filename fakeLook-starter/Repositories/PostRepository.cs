@@ -1,6 +1,7 @@
 ﻿using fakeLook_dal.Data;
 using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,18 @@ namespace fakeLook_starter.Repositories
         public ICollection<Post> GetByPredicate(Func<Post,bool> predicate)
         {
             return _context.Posts.Where(predicate).ToList();
+        }
+
+        public async Task<Post> Delete(int id)
+        {
+            var post = _context.Posts.SingleOrDefault(p => p.Id == id);
+            if (post != null)
+            {
+                _context.Posts.Remove(post);
+                await _context.SaveChangesAsync();
+            }
+
+            return post;
         }
     }
 }

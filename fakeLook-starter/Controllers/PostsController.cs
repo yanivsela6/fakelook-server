@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using fakeLook_dal.Data;
 using fakeLook_models.Models;
+using fakeLook_starter.Interfaces;
 
 namespace fakeLook_starter.Controllers
 {
@@ -14,33 +15,38 @@ namespace fakeLook_starter.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly IPostRepository _repository;
 
-        public PostsController(DataContext context)
+        public PostsController(IPostRepository repo)
         {
-            _context = context;
+            _repository = repo;
         }
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts()
+        public IEnumerable<Post> GetPosts()
+            
         {
-            return await _context.Posts.ToListAsync();
+            return  _repository.GetAll();
         }
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public Post GetPost(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
-
+            var post = _repository.GetById(id);
             if (post == null)
             {
-                return NotFound();
+                return null;
             }
 
             return post;
         }
+
+        // GET: api/Posts/abc/56.8
+        [HttpGet]
+        [Route("abc/{valus}")]
+
 
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -49,27 +55,11 @@ namespace fakeLook_starter.Controllers
         {
             if (id != post.Id)
             {
+                
                 return BadRequest();
             }
 
-            _context.Entry(post).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PostExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            await _repository.Edit(post);
             return NoContent();
         }
 
@@ -78,8 +68,7 @@ namespace fakeLook_starter.Controllers
         [HttpPost]
         public async Task<ActionResult<Post>> PostPost(Post post)
         {
-            _context.Posts.Add(post);
-            await _context.SaveChangesAsync();
+           await _repository.Add(post);
 
             return CreatedAtAction("GetPost", new { id = post.Id }, post);
         }
@@ -88,21 +77,12 @@ namespace fakeLook_starter.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var post = await _context.Posts.FindAsync(id);
+            var post = await _repository.Delete(id);
             if (post == null)
             {
                 return NotFound();
             }
-
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool PostExists(int id)
-        {
-            return _context.Posts.Any(e => e.Id == id);
         }
     }
 }
