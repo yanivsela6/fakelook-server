@@ -17,6 +17,9 @@ using fakeLook_starter.Repositories;
 using fakeLook_models.Models;
 using auth_example.Services;
 using auth_example.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace fakeLook_starter
 {
@@ -34,13 +37,31 @@ namespace fakeLook_starter
         public void ConfigureServices(IServiceCollection services)
         {
 
-
-            services.AddTransient<ITokenService, TokenService>();
+            #region Configure jwt Auth
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      ValidateIssuer = true,
+                      ValidateAudience = true,
+                      ValidateLifetime = true,
+                      ValidateIssuerSigningKey = true,
+                      ValidIssuer = Configuration["Jwt:Issuer"],
+                      ValidAudience = Configuration["Jwt:Issuer"],
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                  };
+              });
+            #endregion
             //services.AddSingleton<IRepository<User>, UsersRepository>();
 
             services.AddControllers();
             #region Setting repository and services interfaces
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ITokenService, TokenService>();
+
+
             #endregion
             #region Setting DB configuration
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -79,6 +100,8 @@ namespace fakeLook_starter
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

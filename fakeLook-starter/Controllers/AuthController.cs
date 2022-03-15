@@ -2,6 +2,7 @@
 using fakeLook_dal.Data;
 using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
+using fakeLook_starter.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,25 +19,24 @@ namespace auth_example.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : Controller
     {
-        private readonly DataContext _repo;
+        private readonly IUserRepository _repo;
         private ITokenService _tokenService { get; }
 
-        public AuthController(DataContext repo,ITokenService tokenService)
+        public AuthController(IUserRepository repo,ITokenService tokenService)
         {
             _repo = repo;
             _tokenService = tokenService;
         }
 
-
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<User>> Login(User user)
+        public IActionResult Login([FromBody] User user)
         {
-            var dbUser =  _repo.Users.Where(a => a.Name.Equals(user.Name) && a.Password.Equals(user.Password)).FirstOrDefault();
+            var dbUser = _repo.GetUser(user);
             if (dbUser == null) return Problem("user not in system");
-            var token = _tokenService.CreateToken(dbUser);
+            var token = _tokenService.CreateToken(user);
             return Ok(new { token });
         }
 
@@ -44,12 +44,12 @@ namespace auth_example.Controllers
         [Route("SignUp")]
         public IActionResult SignUp([FromBody] User user)
         {
-            if (UserExists(user))
+            if (_repo.UserExists(user))
             {
                 return Problem("user name exists");
             }
-            var dbUser = _repo.Users.Add(user);
-            _repo.SaveChanges();
+            var dbUser = _repo.Add(user);
+            if (dbUser == null) return Problem("user signup failed");
             var token = _tokenService.CreateToken(user);
             return Ok(new { token });
         }
@@ -60,14 +60,9 @@ namespace auth_example.Controllers
 
         public IActionResult TestAll()
         {
-            return Ok();
+            return Ok(true);
         }
 
-
-        private bool UserExists(User user)
-        {
-            return _repo.Users.Any(u => u.Name == user.Name);
-        }
 
     }
 }
