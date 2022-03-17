@@ -43,9 +43,40 @@ namespace fakeLook_starter.Controllers
             return post;
         }
 
-        // GET: api/Posts/abc/56.8
-        [HttpGet]
-        [Route("abc/{valus}")]
+        // GET: api/Posts/filter/
+        [HttpPost]
+        [Route("filter")]
+        public IEnumerable<Post> PostFilter(FiltersModel filters)
+        {
+            IEnumerable<Post> postsList = _repository.GetAll();
+            if (filters.DateFrom.HasValue && filters.DateTo.HasValue)
+            {
+                postsList = postsList.Where(d => d.Date >= filters.DateFrom && d.Date <= filters.DateTo);
+            }
+            if (filters.Publishers != null)
+            {
+                //postsList=postsList.Where(p=>p.)
+            }
+            if (filters.Radius != -1)
+            {
+                //
+            }
+            if (filters.Tags != null)
+            {
+                //
+            }
+            if (filters.TagedUsers != null)
+            {
+                //
+                for (int i = 0; i < filters.TagedUsers.Count(); i++)
+                {
+                    //postsList = postsList.Where(t => t.UserTaggedPost.Where(x=>x.User.Equals(filters.TagedUsers[i])));
+                }
+            }
+            
+            return postsList.ToList();
+        }
+
 
 
         // PUT: api/Posts/5
