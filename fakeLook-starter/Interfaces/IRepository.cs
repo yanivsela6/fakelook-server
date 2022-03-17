@@ -16,10 +16,15 @@ namespace fakeLook_starter.Interfaces
     }
     public interface IUserRepository : IRepository<User>
     {
+        public User GetUser(User user);
+        public bool UserExists(User user);
+
+
 
     }
     public interface IPostRepository : IRepository<Post>
     {
-        public Task<Post> Delete(int id);
+        public  Task<Post> Delete(int id);
+
     }
 }
