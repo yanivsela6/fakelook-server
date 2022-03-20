@@ -37,7 +37,8 @@ namespace auth_example.Controllers
             var dbUser = _repo.GetUser(user);
             if (dbUser == null) return Problem("user not in system");
             var token = _tokenService.CreateToken(user);
-            return Ok(new { token });
+            var userId = dbUser.Id;
+            return Ok(new { token ,userId });
         }
 
         [HttpPost]
