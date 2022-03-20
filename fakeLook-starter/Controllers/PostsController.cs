@@ -57,24 +57,21 @@ namespace fakeLook_starter.Controllers
             {
                 //postsList=postsList.Where(p=>p.)
             }
-            if (filters.Radius != -1)
-            {
-                //
-            }
             if (filters.Tags != null)
             {
-                //for (int i = 0; i < filters.Tags.Count; i++)
+                for (int i = 0; i < filters.Tags.Length; i++)
                 {
-                    //postsList = postsList.Where(t => t.Tags.Any(u => u.Id = filters.Tags.))
+                    postsList = postsList.Where(t => t.Tags.Any(u => u.Content == filters.Tags[i]));
                 }
-                //
+                
             }
             if (filters.TagedUsers != null)
             {
                 //
-                for (int i = 0; i < filters.TagedUsers.Count(); i++)
+                for (int i = 0; i < filters.TagedUsers.Length; i++)
                 {
-                    postsList = postsList.Where(t => t.UserTaggedPost.Any(u => u.UserId == filters.TagedUsers[i].Id));
+
+                    postsList = postsList.Where(t => t.UserTaggedPost.Any(u => u.User.Name == filters.TagedUsers[i]));
                 }
             }
             return postsList.ToList();

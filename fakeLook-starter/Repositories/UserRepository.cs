@@ -42,7 +42,7 @@ namespace fakeLook_starter.Repositories
 
         public  User GetUser(User user)
         {
-            return _context.Users.Where(a => a.Name.Equals(user.Name) && a.Password.Equals(user.Password)).FirstOrDefault();
+            return _context.Users.First();
         }
 
         public ICollection<User> GetByPredicate(Func<User, bool> predicate)
