@@ -63,6 +63,10 @@ namespace fakeLook_starter.Controllers
             }
             if (filters.Tags != null)
             {
+                //for (int i = 0; i < filters.Tags.Count; i++)
+                {
+                    //postsList = postsList.Where(t => t.Tags.Any(u => u.Id = filters.Tags.))
+                }
                 //
             }
             if (filters.TagedUsers != null)
@@ -70,10 +74,9 @@ namespace fakeLook_starter.Controllers
                 //
                 for (int i = 0; i < filters.TagedUsers.Count(); i++)
                 {
-                    //postsList = postsList.Where(t => t.UserTaggedPost.Where(x=>x.User.Equals(filters.TagedUsers[i])));
+                    postsList = postsList.Where(t => t.UserTaggedPost.Any(u => u.UserId == filters.TagedUsers[i].Id));
                 }
             }
-            
             return postsList.ToList();
         }
 
