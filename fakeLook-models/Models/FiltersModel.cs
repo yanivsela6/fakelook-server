@@ -11,12 +11,8 @@ namespace fakeLook_models.Models
         public DateTime? DateFrom { get; set; }
         public DateTime? DateTo { get; set; }
         public string[] Publishers { get; set; }
-        public double X_loc { get; set; }
-        public double Y_loc { get; set; }
-        public double Z_loc { get; set; }
-        public int Radius { get; set; }
-        public Tag[] Tags { get; set; }
-        public User[] TagedUsers { get; set; }
+        public string[] Tags { get; set; }
+        public string[] TagedUsers { get; set; }
 
     }
 }
