@@ -20,6 +20,7 @@ using auth_example.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace fakeLook_starter
 {
@@ -55,7 +56,7 @@ namespace fakeLook_starter
             #endregion
             //services.AddSingleton<IRepository<User>, UsersRepository>();
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
             #region Setting repository and services interfaces
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
