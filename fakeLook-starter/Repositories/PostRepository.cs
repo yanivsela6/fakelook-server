@@ -2,6 +2,7 @@
 using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,13 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Post> GetAll()
         {
-            return _context.Posts.ToList();
+            return _context.Posts
+                .Include(p=>p.UserTaggedPost)
+                .Include(p=>p.Likes)
+                .Include(p=>p.Tags)
+                .Include(p=>p.Comments)
+                .ThenInclude(p=>p.Tags)
+                .ToList();
         }
 
         public Post GetById(int id)

@@ -55,29 +55,19 @@ namespace fakeLook_starter.Controllers
             }
             if (filters.Publishers != null)
             {
-                //postsList=postsList.Where(p=>p.)
+                //TODO convert array to hash map
+                    postsList = postsList.Where(u=>filters.Publishers.Contains(u.User.Name));
             }
             if (filters.Tags != null)
             {
-                for (int i = 0; i < filters.Tags.Length; i++)
-                {
-                    postsList = postsList.Where(t => t.Tags.Any(u => u.Content == filters.Tags[i]));
-                }
-                
+                postsList = postsList.Where(t => t.Tags.Any(u => filters.Tags.Contains(u.Content)));   
             }
             if (filters.TagedUsers != null)
             {
-                //
-                for (int i = 0; i < filters.TagedUsers.Length; i++)
-                {
-
-                    postsList = postsList.Where(t => t.UserTaggedPost.Any(u => u.User.Name == filters.TagedUsers[i]));
-                }
+                postsList = postsList.Where(t => t.UserTaggedPost.Any(u => filters.TagedUsers.Contains(u.User.Name)));
             }
             return postsList.ToList();
         }
-
-
 
         // PUT: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
