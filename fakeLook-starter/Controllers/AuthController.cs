@@ -37,8 +37,8 @@ namespace auth_example.Controllers
             var dbUser = _repo.GetUser(user);
             if (dbUser == null) return Problem("user not in system");
             var token = _tokenService.CreateToken(user);
-            var userId = dbUser.Id;
-            return Ok(new { token ,userId });
+            var id = dbUser.Id;
+            return Ok(new { token ,id });
         }
 
         [HttpPost]
@@ -52,7 +52,8 @@ namespace auth_example.Controllers
             var dbUser = _repo.Add(user);
             if (dbUser == null) return Problem("user signup failed");
             var token = _tokenService.CreateToken(user);
-            return Ok(new { token });
+            var id = dbUser.Id;
+            return Ok(new { token, id });
         }
 
         [Authorize]

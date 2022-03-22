@@ -40,11 +40,6 @@ namespace fakeLook_starter.Repositories
                 .Include(p => p.Comments)
                 .ThenInclude(p => p.Tags)
                 .ToList();
-/*                            .Include(p => p.UserTaggedPost)
-                .Include(p => p.Likes)
-                .Include(p => p.Tags)
-                .Include(p => p.Comments)
-                .ThenInclude(p => p.Tags)*/
         }
 
         public Post GetById(int id)
