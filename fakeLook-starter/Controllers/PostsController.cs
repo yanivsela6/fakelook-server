@@ -49,9 +49,13 @@ namespace fakeLook_starter.Controllers
         public IEnumerable<Post> PostFilter(FiltersModel filters)
         {
             IEnumerable<Post> postsList = _repository.GetAll();
-            if (filters.DateFrom.HasValue && filters.DateTo.HasValue)
+            if (filters.DateFrom.HasValue)
             {
-                postsList = postsList.Where(d => ((d.Date >= filters.DateFrom) && (d.Date <= filters.DateTo)));
+                postsList = postsList.Where(d => d.Date >= filters.DateFrom);
+            }
+            if (filters.DateTo.HasValue)
+            {
+                postsList = postsList.Where(d => d.Date <= filters.DateTo);
             }
             if (filters.Publishers[0] != "")
             {
