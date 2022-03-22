@@ -51,21 +51,22 @@ namespace fakeLook_starter.Controllers
             IEnumerable<Post> postsList = _repository.GetAll();
             if (filters.DateFrom.HasValue && filters.DateTo.HasValue)
             {
-                postsList = postsList.Where(d => d.Date >= filters.DateFrom && d.Date <= filters.DateTo);
+                postsList = postsList.Where(d => ((d.Date >= filters.DateFrom) && (d.Date <= filters.DateTo)));
             }
-            if (filters.Publishers != null)
+            if (filters.Publishers[0] != "")
             {
                 //TODO convert array to hash map
                     postsList = postsList.Where(u=>filters.Publishers.Contains(u.User.Name));
             }
-            if (filters.Tags != null)
+            if (filters.Tags[0] != "")
             {
                 postsList = postsList.Where(t => t.Tags.Any(u => filters.Tags.Contains(u.Content)));   
             }
-            if (filters.TagedUsers != null)
+            if (filters.TagsUsers[0] != "")
             {
-                postsList = postsList.Where(t => t.UserTaggedPost.Any(u => filters.TagedUsers.Contains(u.User.Name)));
+                postsList = postsList.Where(t => t.UserTaggedPost.Any(u => filters.TagsUsers.Contains(u.User.Name)));
             }
+
             return postsList.ToList();
         }
 

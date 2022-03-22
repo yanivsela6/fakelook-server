@@ -13,9 +13,12 @@ namespace fakeLook_starter.Repositories
     public class PostRepository : IPostRepository
     {
         readonly private DataContext _context;
-        public PostRepository(DataContext context)
+        readonly private IDtoConverter _converter;
+
+        public PostRepository(DataContext context, IDtoConverter converter)
         {
             _context = context;
+            _converter = converter;
         }
 
         public async Task<Post> Add(Post item)
@@ -34,17 +37,25 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Post> GetAll()
         {
-            return _context.Posts.Include(p => p.UserTaggedPost)
+            return _context.Posts
                 .Include(p => p.Likes)
                 .Include(p => p.Tags)
+                .Include(p => p.UserTaggedPost)
+                .ThenInclude(u => u.User)
+                .Include(p => p.User)
                 .Include(p => p.Comments)
-                .ThenInclude(p => p.Tags)
+                .ThenInclude(c => c.UserTaggedComment)
+                .Include(p => p.Comments)
+                .ThenInclude(c => c.User)
+                .Include(p => p.Comments)
+                .ThenInclude(c => c.Tags)
+                .Select(DtoLogic)
                 .ToList();
-/*                            .Include(p => p.UserTaggedPost)
-                .Include(p => p.Likes)
-                .Include(p => p.Tags)
-                .Include(p => p.Comments)
-                .ThenInclude(p => p.Tags)*/
+            /*                            .Include(p => p.UserTaggedPost)
+                            .Include(p => p.Likes)
+                            .Include(p => p.Tags)
+                            .Include(p => p.Comments)
+                            .ThenInclude(p => p.Tags)*/
         }
 
         public Post GetById(int id)
@@ -68,5 +79,54 @@ namespace fakeLook_starter.Repositories
 
             return post;
         }
+        private Post DtoLogic(Post post)
+        {
+            var dtoPost = _converter.DtoPost(post);
+            dtoPost.User = _converter.DtoUser(post.User);
+            dtoPost.Comments = post.Comments.Count > 0 ? post.Comments.Select(c =>
+            {
+                var dtoComment = _converter.DtoComment(c);
+                dtoComment.User = _converter.DtoUser(c.User);
+                //_converter.DtoUser(c.User);
+                dtoComment.Tags = c.Tags.Count > 0 ? c.Tags.Select(t =>
+                {
+                    var dtoTag = _converter.DtoTag(t);
+                    return dtoTag;
+                }).ToArray() : new List<Tag>();
+
+                dtoComment.UserTaggedComment = c.UserTaggedComment.Count > 0 ? c.UserTaggedComment.Select(ut =>
+                {
+                    return _converter.DtoUserTaggedComment(ut);
+
+                }).ToArray() : new List<UserTaggedComment>();
+
+                return dtoComment;
+            }).ToArray() : new List<Comment>();
+
+            dtoPost.Likes = post.Likes.Count > 0 ? post.Likes.Select(l =>
+            {
+                var dtoLike = _converter.DtoLike(l);
+                dtoLike.User = _converter.DtoUser(l.User);
+                dtoLike.UserId = l.UserId;
+                dtoLike.PostId = l.PostId;
+                return dtoLike;
+            }).ToArray() : new List<Like>();
+
+            dtoPost.Tags = post.Tags.Count > 0 ? post.Tags.Select(t =>
+            {
+                var dtoTag = _converter.DtoTag(t);
+                return dtoTag;
+            }).ToArray() : new List<Tag>();
+
+            dtoPost.UserTaggedPost = post.UserTaggedPost.Count > 0 ? post.UserTaggedPost.Select(utp =>
+            {
+                var dtoUserTaggedPost = _converter.DtoUserTaggedPost(utp);
+                return dtoUserTaggedPost;
+            }).ToArray() : new List<UserTaggedPost>();
+            return dtoPost;
+        }
+
+
     }
+
 }

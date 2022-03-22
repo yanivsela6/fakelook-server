@@ -12,7 +12,7 @@ namespace fakeLook_models.Models
         public DateTime? DateTo { get; set; }
         public string[] Publishers { get; set; }
         public string[] Tags { get; set; }
-        public string[] TagedUsers { get; set; }
+        public string[] TagsUsers { get; set; }
 
     }
 }

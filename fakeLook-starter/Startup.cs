@@ -61,6 +61,9 @@ namespace fakeLook_starter
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<IDtoConverter, DtoConverter>();
+            services.AddScoped<IDtoConverter, DtoConverter>();
+
 
 
             #endregion
