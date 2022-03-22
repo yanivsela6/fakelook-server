@@ -70,10 +70,10 @@ namespace fakeLook_starter.Controllers
             return postsList.ToList();
         }
 
-        // PUT: api/Posts/5
+        // POST: api/Posts/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(int id, Post post)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> PostPost(int id, Post post)
         {
             if (id != post.Id)
             {
