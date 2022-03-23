@@ -16,11 +16,12 @@ namespace fakeLook_starter.Repositories
             _context = context;
         }
 
-        public async Task<User> Add(User item)
+        public async Task<User> Add(User user)
         {
-            var res = _context.Users.Add(item);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return res.Entity;
+            var userDb = GetUser(user);
+            return userDb;
         }
         public async Task<User> Change(User user)
         {

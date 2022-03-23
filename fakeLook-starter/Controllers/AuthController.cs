@@ -43,13 +43,13 @@ namespace auth_example.Controllers
 
         [HttpPost]
         [Route("SignUp")]
-        public IActionResult SignUp([FromBody] User user)
+        public async Task<IActionResult> SignUp([FromBody] User user)
         {
             if (_repo.UserExists(user))
             {
                 return Problem("user name exists");
             }
-            var dbUser = _repo.Add(user);
+            User dbUser = await _repo.Add(user);
             if (dbUser == null) return Problem("user signup failed");
             var token = _tokenService.CreateToken(user);
             var id = dbUser.Id;
