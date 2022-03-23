@@ -22,7 +22,14 @@ namespace fakeLook_starter.Repositories
             await _context.SaveChangesAsync();
             return res.Entity;
         }
-
+        public async Task<User> Change(User user)
+        {
+            //var dbUser = _context.Users.SingleOrDefault(u => u.Name == user.Name);
+            //dbUser.Password = user.Password;
+            //_context.Users.Update(dbUser);
+            //await _context.SaveChangesAsync();
+            //return dbUser;
+        }
         public async Task<User> Edit(User item)
         {
             var res = _context.Users.Update(item);
@@ -42,7 +49,7 @@ namespace fakeLook_starter.Repositories
 
         public  User GetUser(User user)
         {
-            return _context.Users.SingleOrDefault(p => (p.Name == user.Name) && (p.Password == user.Password));
+            return _context.Users.SingleOrDefault(p => ((p.Name == user.Name) && (p.Password == user.Password)));
         }
 
         public ICollection<User> GetByPredicate(Func<User, bool> predicate)

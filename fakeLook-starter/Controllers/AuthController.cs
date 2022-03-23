@@ -56,6 +56,19 @@ namespace auth_example.Controllers
             return Ok(new { token, id });
         }
 
+        [HttpPost]
+        [Route("Password")]
+        public IActionResult Password([FromBody] User user)
+        {
+            if (!_repo.UserExists(user))
+            {
+                return Problem("user name exists");
+            }
+            var dbUser = _repo.Change(user);
+            if (dbUser == null) return Problem("password change failed");
+            return Ok();
+        }
+
         [Authorize]
         [HttpGet]
         [Route("TestAll")]
