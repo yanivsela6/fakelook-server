@@ -27,7 +27,11 @@ namespace fakeLook_starter.Interfaces
     }
     public interface IPostRepository : IRepository<Post>
     {
-        public  Task<Post> Delete(int id);
+        public Task<Post> Delete(int id);
+        public Task<Like> EditLike(int id);
+
+        public Task<Like> AddLike(Like item);
+        public Task<Comment> AddComment(Comment item);
 
     }
 }

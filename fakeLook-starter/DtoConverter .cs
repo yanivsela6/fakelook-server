@@ -31,7 +31,8 @@ namespace fakeLook_starter
             {
                 Id = user.Id,
                 Password = user.Password,
-                Address = user.Address
+                Address = user.Address,
+                
             };
         }
 

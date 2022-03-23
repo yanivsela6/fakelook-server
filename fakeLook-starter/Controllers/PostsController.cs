@@ -13,6 +13,7 @@ namespace fakeLook_starter.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class PostsController : ControllerBase
     {
         private readonly IPostRepository _repository;
@@ -81,7 +82,7 @@ namespace fakeLook_starter.Controllers
         {
             if (id != post.Id)
             {
-                
+
                 return BadRequest();
             }
 
@@ -109,6 +110,39 @@ namespace fakeLook_starter.Controllers
                 return NotFound();
             }
             return NoContent();
+        }
+
+        //LIKES
+        [HttpPost]
+        [Route("Likes")]
+        public async Task<ActionResult<Like>> PostLike(Like like)
+        {
+
+           var likeDb = await _repository.AddLike(like);
+
+            return  Ok(new { likeDb, like.Id });
+
+        }
+
+        [HttpPost]
+        [Route("Likes1")]
+        public async Task<ActionResult<Like>> UpdateLike(int id)
+        {
+
+            var likeDb = await _repository.EditLike(id);
+            return Ok(likeDb);
+        }
+
+        //Comnents
+        [HttpPost]
+        [Route("Comments")]
+        public async Task<ActionResult<Comment>> PostComment(Comment comment)
+        {
+
+            var commentDb = await _repository.AddComment(comment);
+
+            return Ok(new { commentDb, comment.Id });
+
         }
     }
 }

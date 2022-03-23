@@ -21,6 +21,31 @@ namespace fakeLook_starter.Repositories
             _converter = converter;
         }
 
+        //LIKES
+
+        public async Task<Like> EditLike(int id)
+        {
+            var like = GetByIdLike(id);
+            like.IsActive = !like.IsActive;
+            var res = _context.Likes.Update(like);
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
+
+        public Like GetByIdLike(int id)
+        {
+            return _context.Likes.SingleOrDefault(p => p.Id == id);
+        }
+
+
+        public async Task<Like> AddLike(Like item)
+        {
+            var res = _context.Likes.Add(new Like { PostId=item.PostId ,UserId=item.UserId,IsActive= true} );
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
+
+
         public async Task<Post> Add(Post item)
         {
             var res = _context.Posts.Add(item);
@@ -39,6 +64,7 @@ namespace fakeLook_starter.Repositories
         {
             return _context.Posts
                 .Include(p => p.Likes)
+                .ThenInclude(l=>l.User)
                 .Include(p => p.Tags)
                 .Include(p => p.UserTaggedPost)
                 .ThenInclude(u => u.User)
@@ -126,7 +152,12 @@ namespace fakeLook_starter.Repositories
             return dtoPost;
         }
 
-
+        public async Task<Comment> AddComment(Comment item)
+        {
+            var res = _context.Comments.Add(new Comment { PostId = item.PostId, UserId = item.UserId, Content = item.Content });
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
     }
 
 }
