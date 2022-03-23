@@ -77,11 +77,6 @@ namespace fakeLook_starter.Repositories
                 .ThenInclude(c => c.Tags)
                 .Select(DtoLogic)
                 .ToList();
-            /*                            .Include(p => p.UserTaggedPost)
-                            .Include(p => p.Likes)
-                            .Include(p => p.Tags)
-                            .Include(p => p.Comments)
-                            .ThenInclude(p => p.Tags)*/
         }
 
         public Post GetById(int id)
@@ -155,6 +150,13 @@ namespace fakeLook_starter.Repositories
         public async Task<Comment> AddComment(Comment item)
         {
             var res = _context.Comments.Add(new Comment { PostId = item.PostId, UserId = item.UserId, Content = item.Content });
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
+
+        public async Task<Tag> AddTag(Tag item)
+        {
+            var res = _context.Tags.Add(new Tag {Content = item.Content });
             await _context.SaveChangesAsync();
             return res.Entity;
         }

@@ -32,6 +32,7 @@ namespace fakeLook_starter.Interfaces
 
         public Task<Like> AddLike(Like item);
         public Task<Comment> AddComment(Comment item);
+        public Task<Tag> AddTag(Tag item);
 
     }
 }

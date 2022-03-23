@@ -142,7 +142,18 @@ namespace fakeLook_starter.Controllers
             var commentDb = await _repository.AddComment(comment);
 
             return Ok(new { commentDb, comment.Id });
+        }
 
+        //Tags
+
+        [HttpPost]
+        [Route("Tags")]
+        public async Task<ActionResult<Tag>> PostTag(Tag tag)
+        {
+
+            var commentDb = await _repository.AddTag(tag);
+
+            return Ok(new { commentDb, tag.Id });
         }
     }
 }
