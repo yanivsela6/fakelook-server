@@ -32,6 +32,7 @@ namespace fakeLook_starter
                 Id = user.Id,
                 Password = user.Password,
                 Address = user.Address,
+                Name = user.Name,
                 
             };
         }
