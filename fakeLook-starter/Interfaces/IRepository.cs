@@ -18,7 +18,7 @@ namespace fakeLook_starter.Interfaces
     {
         public User GetUser(User user);
         public bool UserExists(User user);
-        public  Task<User> Change(User user);
+        public Task<User> Change(User user);
 
 
 
